@@ -1,0 +1,16 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# bin
+/NorthWind.API/bin
+/NorthWind.BL/bin
+/NorthWind.DL/bin
+/NorthWind.Entity/bin
+/NorthWind.Library/bin
+
+#obj
+/NorthWind.API/obj
+/NorthWind.BL/obj
+/NorthWind.DL/obj
+/NorthWind.Entity/obj
+/NorthWind.Library/obj
+/WebApplicationTestAPI

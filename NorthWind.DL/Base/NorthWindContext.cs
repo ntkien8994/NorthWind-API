@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using NorthWind.Entity;
+using NorthWind.Library;
 
 namespace NorthWind.DL
 {
@@ -17,9 +18,10 @@ namespace NorthWind.DL
         public virtual DbSet<T> ListBase { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            string connectionString = Config.GetAppSetting(AppSettingKey.CONNECTION_STRING);
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=KIENNGUYEN\\NTKIEN;Database=NorthWind;User Id=sa;Password=dunghoi@1234");
+                optionsBuilder.UseSqlServer(connectionString, options => options.EnableRetryOnFailure());
             }
         }
     }

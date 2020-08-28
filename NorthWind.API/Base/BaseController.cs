@@ -156,11 +156,23 @@ namespace NorthWind.API.Base
                 }
                 else
                 {
-                    var task = (Task)_bl.GetType().GetMethod("GetById").Invoke(_bl, new object[] { Guid.Parse(id) });
-                    await task.ConfigureAwait(false);
-                    var data = task.GetType().GetProperty("Result").GetValue(task);
-                    serviceResult.Data = JsonConvert.SerializeObject(data);
-                    serviceResult.ResultCode = (int)ServiceResultCode.Success;
+                    Guid objectId = Guid.Empty;
+                    Guid.TryParse(id, out objectId);
+                    if (objectId ==Guid.Empty)
+                    {
+                        var data = Factory.CreateEntity(entity);
+                        serviceResult.Data = JsonConvert.SerializeObject(data);
+                        serviceResult.ResultCode = (int)ServiceResultCode.Success;
+                    }
+                    else
+                    {
+                        var task = (Task)_bl.GetType().GetMethod("GetById").Invoke(_bl, new object[] { objectId });
+                        await task.ConfigureAwait(false);
+                        var data = task.GetType().GetProperty("Result").GetValue(task);
+                        serviceResult.Data = JsonConvert.SerializeObject(data);
+                        serviceResult.ResultCode = (int)ServiceResultCode.Success;
+                    }
+                    
                 }
             }
             catch (Exception ex)
