@@ -9,6 +9,7 @@ using NorthWind.Library;
 using System.Reflection;
 using Newtonsoft.Json;
 using static NorthWind.Library.Enumeration;
+using System.ComponentModel.DataAnnotations;
 
 namespace NorthWind.API.Base
 {
@@ -161,6 +162,7 @@ namespace NorthWind.API.Base
                     if (objectId ==Guid.Empty)
                     {
                         var data = Factory.CreateEntity(entity);
+                        Utility.SetValueForPrimaryKey(ref data);
                         serviceResult.Data = JsonConvert.SerializeObject(data);
                         serviceResult.ResultCode = (int)ServiceResultCode.Success;
                     }

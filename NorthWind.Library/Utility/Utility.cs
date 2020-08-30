@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using static NorthWind.Library.Enumeration;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Linq.Expressions;
+using System.Threading;
 
 namespace NorthWind.Library
 {
@@ -119,5 +123,54 @@ namespace NorthWind.Library
             return f.Method;
         }
 
+        /// <summary>
+        /// hàm thực hiện lấy tên trường khóa chính
+        /// </summary>
+        /// <param name="obj">đối tượng</param>
+        /// <returns></returns>
+        /// created by: ntkien 29.08.2020
+        public static string GetPrimaryKeyName(object obj)
+        {
+            string result = "";
+            if (obj==null)
+            {
+                return "";
+            }
+            var properties = obj.GetType().GetProperties();
+            if (properties !=null && properties.Length>0)
+            {
+                foreach (var prop in properties)
+                {
+                    var customAttrs = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType == typeof(KeyAttribute));
+                    if (customAttrs!=null)
+                    {
+                        result = prop.Name;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// hàm thực hiện set giá trị cho trường khóa chính
+        /// </summary>
+        /// <param name="obj"></param>
+        /// created by: ntkien 30.08.2020
+        public static void SetValueForPrimaryKey(ref object obj)
+        {
+            if (obj==null)
+            {
+                return;
+            }
+            string primaryKeyName = GetPrimaryKeyName(obj);
+            PropertyInfo prop = obj.GetType().GetProperty(primaryKeyName);
+            switch(prop.PropertyType.Name.ToLower())
+            {
+                case "guid":
+                    prop.SetValue(obj, Guid.NewGuid());
+                    break;
+            }
+        }
     }
 }
