@@ -20,7 +20,7 @@ namespace NorthWind.BL
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// created by: ntkien 11.05.2020
-    public class BLBase<T>:IBLBase<T> where T : EntityBase, new()
+    public class BLBase<T> : IBLBase<T> where T : EntityBase, new()
     {
         #region Declare
         /// <summary>
@@ -152,16 +152,20 @@ namespace NorthWind.BL
                 }
                 //ntkien 04.06.2020 lấy tổng số bản ghi
                 totalCounts = await query.CountAsync();
-                if (_PagingObject.Skip>=0)
+                if (_PagingObject.Skip >= 0)
                 {
                     query = query.Skip(_PagingObject.Skip).Take(_PagingObject.Take);
                 }
                 //ntkien 04.06.2020 nếu khóa chính ko truyền vào thì lấy theo định dạng EntityName + Id
-                var primayKey = _PagingObject.PrimaryKey;
+                T t = new T();
+                var primayKey = Utility.GetPrimaryKeyName(t);
                 if (string.IsNullOrWhiteSpace(primayKey))
                 {
-                    T t = new T();
-                    primayKey = string.Format("{0}Id", t.GetType().Name);
+                    primayKey = _PagingObject.PrimaryKey;
+                    if (string.IsNullOrWhiteSpace(primayKey))
+                    {
+                        primayKey = string.Format("{0}Id", t.GetType().Name);
+                    }
                 }
                 var x = Expression.Parameter(typeof(T), "x");
                 var body = Expression.PropertyOrField(x, primayKey);
@@ -176,7 +180,7 @@ namespace NorthWind.BL
                     Expression eqe;
                     foreach (object id in ids)
                     {
-                        eqe = Expression.Equal(mba.Body,Expression.Constant(id, mba.ReturnType));
+                        eqe = Expression.Equal(mba.Body, Expression.Constant(id, mba.ReturnType));
                         if (expressions == null)
                         {
                             expressions = eqe;
@@ -195,6 +199,41 @@ namespace NorthWind.BL
                         new Expression[] { resultQuery.Expression, Expression.Quote(expression) });
                     resultQuery = resultQuery.Provider.CreateQuery<T>(resultExpression);
 
+
+
+                    if (_PagingObject.OrderInfos != null && _PagingObject.OrderInfos.Count > 0)
+                    {
+                        bool isFirst = true;
+                        foreach (OrderByObject orderByObject in _PagingObject.OrderInfos)
+                        {
+                            string sort = orderByObject.SortOperation;
+                            if (!string.IsNullOrWhiteSpace(sort) && sort.Equals("desc", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (isFirst)
+                                {
+                                    resultQuery = resultQuery.ApplyOrderByDesc(orderByObject.ColumnName);
+                                }
+                                else
+                                {
+                                    resultQuery = resultQuery.ApplyThenByDesc(orderByObject.ColumnName);
+                                    isFirst = false;
+                                }
+                            }
+                            else
+                            {
+                                if (isFirst)
+                                {
+                                    resultQuery = resultQuery.ApplyOrderBy(orderByObject.ColumnName);
+                                }
+                                else
+                                {
+                                    resultQuery = resultQuery.ApplyThenBy(orderByObject.ColumnName);
+                                    isFirst = false;
+                                }
+                            }
+                        }
+                    }
+
                     results = await resultQuery.ToListAsync();
                 }
 
@@ -202,7 +241,7 @@ namespace NorthWind.BL
 
             return new PagingResult<T>() { Data = results, TotalCount = totalCounts };
         }
-        
+
         /// <summary>
         /// get object by id
         /// </summary>
@@ -225,12 +264,12 @@ namespace NorthWind.BL
         /// <param name="masterId">id của master</param>
         /// <returns></returns>
         /// created by: ntkien 24.05.2020
-        public virtual async Task<List<T>> GetDetailByMasterId(string masterColumn,string masterId)
+        public virtual async Task<List<T>> GetDetailByMasterId(string masterColumn, string masterId)
         {
             List<T> result = null;
             using (NorthWindContext<T> context = new NorthWindContext<T>())
             {
-                result = await context.ListBase.ApplyWhere(masterColumn,masterId,ColumnTypeEnum.String,ExpressionOperationEnum.Equals).ToListAsync();
+                result = await context.ListBase.ApplyWhere(masterColumn, masterId, ColumnTypeEnum.String, ExpressionOperationEnum.Equals).ToListAsync();
             }
             return result;
         }
@@ -249,10 +288,15 @@ namespace NorthWind.BL
                 {
                     if (item.EditMode == Enumeration.EditMode.Add)
                     {
+                        //thực hiện set ngày ở đây
+                        item.CreatedDate = DateTime.Now;
+                        item.ModifiedDate = DateTime.Now;
                         context.ListBase.Add(item);
                     }
                     else if (item.EditMode == Enumeration.EditMode.Edit)
                     {
+                        //thực hiện set ngày ở đây
+                        item.ModifiedDate = DateTime.Now;
                         context.ListBase.Update(item);
                     }
                     else if (item.EditMode == Enumeration.EditMode.Delete)
@@ -307,8 +351,8 @@ namespace NorthWind.BL
                             }
                         }
                     }
-                    effects = await context.SaveChangesAsync();
                 }
+                effects = await context.SaveChangesAsync();
                 return effects;
             }
         }
