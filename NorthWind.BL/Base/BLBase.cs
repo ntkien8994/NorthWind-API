@@ -115,7 +115,16 @@ namespace NorthWind.BL
                 {
                     foreach (WhereObject whereObject in _PagingObject.WhereInfos)
                     {
-                        query = query.ApplyWhere(whereObject.ColumnName, whereObject.Value, whereObject.ColumnType, whereObject.Operation);
+                        //ntkien: nếu là toán tử bettween thì sẽ apply where 2 lần
+                        if (whereObject.Operation==ExpressionOperationEnum.Bettween)
+                        {
+                            query = query.ApplyWhere(whereObject.ColumnName, whereObject.Value, whereObject.ColumnType, ExpressionOperationEnum.GreatThanEqual);
+                            query = query.ApplyWhere(whereObject.ColumnName, whereObject.Value2, whereObject.ColumnType, ExpressionOperationEnum.LessThanEqual);
+                        }
+                        else
+                        {
+                            query = query.ApplyWhere(whereObject.ColumnName, whereObject.Value, whereObject.ColumnType, whereObject.Operation);
+                        }    
                     }
                 }
                 if (_PagingObject.OrderInfos != null && _PagingObject.OrderInfos.Count > 0)

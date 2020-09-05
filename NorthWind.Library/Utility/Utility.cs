@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Globalization;
 
 namespace NorthWind.Library
 {
@@ -87,9 +88,12 @@ namespace NorthWind.Library
                 case "datetime":
                     result = default(DateTime);
                     DateTime dateValue;
-                    DateTime.TryParse(value, out dateValue);
+                    //DateTime.TryParse(value, out dateValue);
+                    DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateValue);
                     result = dateValue;
                     break;
+                case "int32":
+                case "int64":
                 case "int":
                     result = default(int);
                     int iValue;
@@ -114,7 +118,16 @@ namespace NorthWind.Library
             }
             return result;
         }
-
+        /// <summary>
+        /// hàm kiểm tra xem có phải là kiểu nullable ko
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        /// created by: ntkien 04.09.2020
+        public static bool IsNullableType(Type t)
+        {
+            return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
         public static MethodInfo GetMethodInfo<T1, T2, T3>(
             Func<T1, T2, T3> f,
             T1 unused1,

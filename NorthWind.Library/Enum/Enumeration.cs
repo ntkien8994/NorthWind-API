@@ -26,7 +26,7 @@ namespace NorthWind.Library
         /// </summary>
         public enum ServiceResultCode
         {
-            Success=200,
+            Success = 200,
             UnAuthorize = 401,
             NotFound = 404,
             InternalError = 500
@@ -42,7 +42,10 @@ namespace NorthWind.Library
             GreatThan = 3,
             GreatThanEqual = 4,
             LessThan = 5,
-            LessThanEqual = 6
+            LessThanEqual = 6,
+            Bettween = 7,
+            StartsWith = 8,
+            EndsWith = 9
         }
 
         /// <summary>
