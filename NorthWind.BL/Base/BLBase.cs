@@ -348,7 +348,13 @@ namespace NorthWind.BL
                             var editMode = (Enumeration.EditMode)value;
                             if (editMode == Enumeration.EditMode.Add)
                             {
-                                dbSet.GetType().GetMethod("Add").Invoke(dbSet, new object[] { obj });
+                                //ntkien: 23.09.2020 để tối ưu thì sẽ set lại value cho khóa chính ở đây.
+                                // vì ko referen  gì nên thay đổi value khóa chính ko vấn đề gì
+                                //sau khi save xong đã reload lại rồi nên sẽ lấy dữ liệu mới nhất trong database
+                                var objAdd = obj;
+                                var primayKey = Utility.GetPrimaryKeyName(objAdd);
+                                Utility.SetValueForPrimaryKey(ref objAdd);
+                                dbSet.GetType().GetMethod("Add").Invoke(dbSet, new object[] { objAdd });
                             }
                             else if (editMode == Enumeration.EditMode.Edit)
                             {

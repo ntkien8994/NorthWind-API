@@ -102,10 +102,11 @@ namespace NorthWind.Library
             return source.Provider.CreateQuery<T>(resultExpression);
         }
 
-        public static IQueryable<T> ApplyWhere<T>(this IQueryable<T> source, string propertyName, string propertyValue, ColumnTypeEnum propertyType, ExpressionOperationEnum operation) where T : class
+        public static IQueryable<T> ApplyWhere<T>(this IQueryable<T> source, string propertyName, string propertyValue, ColumnTypeEnum propertyType, ExpressionOperationEnum operation) where T : class,new()
         {
+            string proName = Utility.GetStandardPropertyName(new T(), propertyName);
             // 1. Retrieve member access expression
-            var mba = PropertyAccessorCache<T>.Get(propertyName);
+            var mba = PropertyAccessorCache<T>.Get(proName);
             if (mba == null) return source;
 
             //2.Try converting value to correct type

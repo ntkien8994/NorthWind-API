@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NorthWind.Entity
@@ -7,6 +8,7 @@ namespace NorthWind.Entity
     [Table("Category")]
     public partial class Category : EntityBase
     {
+        [Key()]
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
         public int? CategoryType { get; set; }

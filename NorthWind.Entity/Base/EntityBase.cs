@@ -12,5 +12,7 @@ namespace NorthWind.Entity
         public string ModifiedBy { get; set; }
         [NotMapped]
         public Enumeration.EditMode EditMode { get; set; }
+
+        //public string Count { get; set; }
     }
 }

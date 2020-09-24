@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NorthWind.Entity
 {
+    [Table("News")]
     public partial class News : EntityBase
     {
+        [Key()]
         public Guid NewsId { get; set; }
         public string Title { get; set; }
         public string Tag { get; set; }

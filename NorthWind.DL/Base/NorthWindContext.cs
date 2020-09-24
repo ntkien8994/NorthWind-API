@@ -16,6 +16,8 @@ namespace NorthWind.DL
         {
         }
         public virtual DbSet<T> ListBase { get; set; }
+        public virtual DbSet<ContractDetail> ContractDetails { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = Config.GetAppSetting(AppSettingKey.CONNECTION_STRING);

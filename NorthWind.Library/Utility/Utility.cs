@@ -166,6 +166,33 @@ namespace NorthWind.Library
         }
 
         /// <summary>
+        /// hàm thực hiện lấy tên chuẩn đã đặt trong entity
+        /// </summary>
+        /// <param name="obj">đối tượng</param>
+        /// <returns></returns>
+        /// created by: ntkien 23.09.2020
+        public static string GetStandardPropertyName(object obj,string propertyName)
+        {
+            string result = "";
+            if (obj == null)
+            {
+                return "";
+            }
+            var properties = obj.GetType().GetProperties();
+            if (properties != null && properties.Length > 0)
+            {
+                foreach (var prop in properties)
+                {
+                    if (prop.Name.Equals(propertyName,StringComparison.OrdinalIgnoreCase))
+                    {
+                        result = prop.Name;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+        /// <summary>
         /// hàm thực hiện set giá trị cho trường khóa chính
         /// </summary>
         /// <param name="obj"></param>
