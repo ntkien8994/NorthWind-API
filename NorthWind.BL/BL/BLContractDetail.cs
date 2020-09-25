@@ -13,15 +13,13 @@ namespace NorthWind.BL
 {
     public class BLContractDetail : BLBase<ContractDetail>
     {
-        public async override Task<List<ContractDetail>> GetDetailByMasterId(string masterColumn, string masterId)
+        public async Task<List<ContractDetailView>> GetDetailViewByMasterId(string masterId)
         {
-            List<ContractDetail> result = null;
-            using (NorthWindContext<ContractDetail> context = new NorthWindContext<ContractDetail>())
+            using (NorthWindContext<ContractDetailView> context = new NorthWindContext<ContractDetailView>())
             {
-                result = await context.ContractDetails.FromSqlRaw("Exec [dbo].[Proc_GetContractDetail_ById] @ContractId={0}", masterId)
+                return await context.ContractDetailsView.FromSqlRaw("Exec [dbo].[Proc_GetContractDetail_ById] @ContractId={0}", masterId)
                     .ToListAsync();
             }
-            return result;
         }
     }
 }

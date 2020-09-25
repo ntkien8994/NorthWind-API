@@ -6,8 +6,7 @@ using System.Text;
 
 namespace NorthWind.Entity
 {
-    [Table("ContractDetail")]
-    public class ContractDetail : EntityBase
+    public class ContractDetailView : EntityBase
     {
         [Key()]
         public Guid ContractDetailId { get; set; }
@@ -15,6 +14,8 @@ namespace NorthWind.Entity
         public Guid? ContractId { get; set; }
 
         public Guid? ProductId { get; set; }
+        public string ProductCode { get; set; }
+        public string ProductName { get; set; }
 
         public decimal? UnitPrice { get; set; }
 
@@ -25,6 +26,5 @@ namespace NorthWind.Entity
         public decimal? PromotionRate { get; set; }
 
         public decimal? TotalAmount { get; set; }
-        //public Product Product { get; set; }
     }
 }

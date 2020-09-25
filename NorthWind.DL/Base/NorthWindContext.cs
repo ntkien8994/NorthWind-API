@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NorthWind.Entity;
 using NorthWind.Library;
@@ -16,7 +19,10 @@ namespace NorthWind.DL
         {
         }
         public virtual DbSet<T> ListBase { get; set; }
+        public virtual DbSet<Contract> Contracts { get; set; }
         public virtual DbSet<ContractDetail> ContractDetails { get; set; }
+        [NotMapped]
+        public virtual DbSet<ContractDetailView> ContractDetailsView { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NorthWind.Entity;
-using NorthWind.BL;
 using NorthWind.Library;
 using System.Reflection;
 using Newtonsoft.Json;
 using static NorthWind.Library.Enumeration;
-using System.ComponentModel.DataAnnotations;
 
 namespace NorthWind.API.Base
 {
@@ -55,83 +51,6 @@ namespace NorthWind.API.Base
             }
             return serviceResult;
         }
-        ///// <summary>
-        ///// Lấy tất cả danh sách theo của đối tượng theo điều kiện truyền vào
-        ///// </summary>
-        ///// <param name="entity">đối tượng</param>
-        ///// <returns></returns>
-        ///// created by: ntkien 21.05.2020
-        //[HttpGet, Route("{entity}/where")]
-        //public virtual async Task<ServiceResult> GetByWhere(string entity)
-        //{
-
-        //    ServiceResult serviceResult = new ServiceResult();
-        //    try
-        //    {
-        //        var _bl = Factory.CreateBL(entity);
-        //        //nếu ko tìm thấy đối tượng BL tương ứng thì báo lỗi về cho client
-        //        if (_bl == null)
-        //        {
-        //            serviceResult.Message = Constant.SERVICE_ERROR_ENTITY_NOT_FOUND + " " + entity;
-        //            serviceResult.ResultCode = (int)ServiceResultCode.NotFound;
-        //            serviceResult.Success = false;
-        //        }
-        //        else
-        //        {
-        //            var task = (Task)_bl.GetType().GetMethod("GetByWhere").Invoke(_bl, null);
-        //            await task.ConfigureAwait(false);
-        //            var data = task.GetType().GetProperty("Result").GetValue(task);
-        //            serviceResult.Data = JsonConvert.SerializeObject(data);
-        //            serviceResult.ResultCode = (int)ServiceResultCode.Success;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        serviceResult.Success = false;
-        //        serviceResult.Message = ex.Message;
-        //        serviceResult.ResultCode = (int)ServiceResultCode.InternalError;
-        //    }
-        //    return serviceResult;
-        //}
-        ///// <summary>
-        ///// Lấy tất cả danh sách theo của đối tượng theo điều kiện truyền vào
-        ///// </summary>
-        ///// <param name="entity">đối tượng</param>
-        ///// <returns></returns>
-        ///// created by: ntkien 21.05.2020
-        //[HttpGet, Route("{entity}/order")]
-        //public virtual async Task<ServiceResult> GetByOrder(string entity)
-        //{
-
-        //    ServiceResult serviceResult = new ServiceResult();
-        //    try
-        //    {
-        //        var _bl = Factory.CreateBL(entity);
-        //        //nếu ko tìm thấy đối tượng BL tương ứng thì báo lỗi về cho client
-        //        if (_bl == null)
-        //        {
-        //            serviceResult.Message = Constant.SERVICE_ERROR_ENTITY_NOT_FOUND + " " + entity;
-        //            serviceResult.ResultCode = (int)ServiceResultCode.NotFound;
-        //            serviceResult.Success = false;
-        //        }
-        //        else
-        //        {
-        //            var task = (Task)_bl.GetType().GetMethod("GetByOrder").Invoke(_bl, null);
-        //            await task.ConfigureAwait(false);
-        //            var data = task.GetType().GetProperty("Result").GetValue(task);
-        //            serviceResult.Data = JsonConvert.SerializeObject(data);
-        //            serviceResult.ResultCode = (int)ServiceResultCode.Success;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        serviceResult.Success = false;
-        //        serviceResult.Message = ex.Message;
-        //        serviceResult.ResultCode = (int)ServiceResultCode.InternalError;
-        //    }
-        //    return serviceResult;
-        //}
-
         
         /// <summary>
         /// Lấy đối tượng theo id
@@ -189,7 +108,6 @@ namespace NorthWind.API.Base
 
         /// <summary>
         /// Lấy danh sách chi tiết theo masterid
-        /// vì tên cột đang phải giống chính xác trong database nên tạm thời dùng paging để lấy ra detail
         /// </summary>
         /// <param name="entity">đối tượng</param>
         /// <param name="masterColumn">tên cột master</param>
