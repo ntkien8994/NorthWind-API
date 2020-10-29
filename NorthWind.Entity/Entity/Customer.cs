@@ -16,6 +16,11 @@ namespace NorthWind.Entity
         public string Phone { get; set; }
         public int? Age { get; set; }
         public Decimal? Revenue { get; set; }
+        public DateTime? BirthDate { get; set; }
         public bool? Inactive { get; set; }
+        public string BankId { get; set; }
+
     }
 }
+
+

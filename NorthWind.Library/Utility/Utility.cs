@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using static NorthWind.Library.Enumeration;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Linq.Expressions;
-using System.Threading;
 using System.Globalization;
-
+using Newtonsoft.Json;
 namespace NorthWind.Library
 {
     /// <summary>
@@ -74,7 +69,7 @@ namespace NorthWind.Library
         /// <param name="columnType">giá trị kiểu type</param>
         /// <returns></returns>
         /// created by: ntkien 03.06.2020
-        public static object ConvertValueByType(string value, string columnType)
+        public static object ConvertValueByType(object value, string columnType)
         {
             object result = null;
             switch (columnType.ToLower())
@@ -82,34 +77,35 @@ namespace NorthWind.Library
                 case "boolean":
                     result = default(bool);
                     bool boolValue;
-                    bool.TryParse(value, out boolValue);
+                    bool.TryParse(value.ToString(), out boolValue);
                     result = boolValue;
                     break;
                 case "datetime":
                     result = default(DateTime);
                     DateTime dateValue;
                     //DateTime.TryParse(value, out dateValue);
-                    DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateValue);
+                    DateTime.TryParseExact(value.ToString(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateValue);
                     result = dateValue;
                     break;
                 case "int32":
+                    result = JsonConvert.DeserializeObject<Int32>(value.ToString());
+                    break;
                 case "int64":
+                    result = JsonConvert.DeserializeObject<Int64>(value.ToString());
+                    break;
                 case "int":
                     result = default(int);
                     int iValue;
-                    int.TryParse(value, out iValue);
+                    int.TryParse(value.ToString(), out iValue);
                     result = iValue;
                     break;
                 case "decimal":
-                    result = default(decimal);
-                    decimal decimalValue;
-                    decimal.TryParse(value, out decimalValue);
-                    result = decimalValue;
+                    result = JsonConvert.DeserializeObject<decimal>(value.ToString());
                     break;
                 case "guid":
                     result = default(Guid);
                     Guid guidValue;
-                    Guid.TryParse(value, out guidValue);
+                    Guid.TryParse(value.ToString(), out guidValue);
                     result = guidValue;
                     break;
                 case "string":

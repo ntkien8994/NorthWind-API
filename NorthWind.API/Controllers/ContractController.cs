@@ -25,9 +25,12 @@ namespace NorthWind.API.Controllers
         public virtual async Task<ServiceResult> GetDetailViewByMaster(string masterId)
         {
 
+
+
             ServiceResult serviceResult = new ServiceResult();
             try
             {
+
                 BLContractDetail bl = new BLContractDetail();
                 var data = await bl.GetDetailViewByMasterId(masterId);
                 serviceResult.Data = JsonConvert.SerializeObject(data);

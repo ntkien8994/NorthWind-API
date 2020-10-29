@@ -43,7 +43,7 @@ namespace NorthWind.Entity
         /// <summary>
         /// Giá trị
         /// </summary>
-        public string Value { get; set; }
+        public object Value { get; set; }
         /// <summary>
         /// nếu so sánh nằm trong khoảng thì bổ sung thêm giá trị Value2
         /// </summary>
